@@ -20,7 +20,7 @@ Aunque visualmente respeta la estética del juego original, el motor interno fue
 * **Motor Relacional de Fusiones:** El sistema de combinaciones de plantas funciona a través de un diccionario de *Tuplas* en C#, actuando como una base de datos ultrarrápida que destruye, instancia y actualiza el ID lógico en un solo micro-ciclo de procesamiento.
 * **Separación de Capas (Backend/Frontend):** Las entidades lógicas (salud, daño, estados) están completamente aisladas de los *sprites* visuales, permitiendo aplicar el comportamiento de fusión a cualquier objeto con solo cambiar su identificador numérico.
 * **Físicas y Hitboxes Desacoplados:** El sistema de daño utiliza componentes `Collider2D` delegados, conectando las colisiones del motor de físicas directamente a las variables de salud de los scripts principales de manera limpia.
-
+* **Patrón Singleton y UI Desacoplada:** La economía (generación, validación de costos y recolección de soles vía Raycast) se gestiona a través de una instancia global única (`GestorEconomia`), la cual actualiza la interfaz de usuario en tiempo real sin crear dependencias circulares con la lógica del tablero.
 ---
 
 ## 🚀 Estado Actual del Desarrollo
@@ -30,7 +30,7 @@ Aunque visualmente respeta la estética del juego original, el motor interno fue
 - [x] Diccionario relacional para fusiones exitosas.
 - [x] Comportamiento autónomo de combate (Temporizadores e instanciación de proyectiles).
 - [x] Máquina de estados para enemigos (Caminar / Masticar / Morir).
-- [ ] Sistema económico de generación y recolección de Soles.
+- [x] Sistema económico de generación y recolección de Soles.
 - [ ] Spawner automatizado por oleadas.
 
 ---
