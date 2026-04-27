@@ -14,7 +14,8 @@ public class GridManager : MonoBehaviour
 
     [Header("Catálogo de Prefabs")]
     public GameObject prefabPlantaBase;     
-    public GameObject prefabPlantaFusionada; 
+    public GameObject prefabPlantaFusionada;
+    public GameObject prefabGirasol;
 
     private int[,] tableroLogico;
 
@@ -41,6 +42,17 @@ public class GridManager : MonoBehaviour
             Vector2 posMousePantalla = Mouse.current.position.ReadValue();
             Vector2 posMouse = Camera.main.ScreenToWorldPoint(posMousePantalla);
 
+            RaycastHit2D hit = Physics2D.Raycast(posMouse, Vector2.zero);
+
+            if (hit.collider != null && hit.collider.CompareTag("Sol"))
+            {
+                int valorSol = hit.collider.GetComponent<Sol>().valor;
+                GestorEconomia.Instancia.AgregarSoles(valorSol);
+                Destroy(hit.collider.gameObject);
+
+                return; 
+            }
+
             float offsetX = (columnas - 1) * anchoCelda / 2f;
             float offsetY = (filas - 1) * altoCelda / 2f;
 
@@ -50,7 +62,7 @@ public class GridManager : MonoBehaviour
             if (x >= 0 && x < columnas && y >= 0 && y < filas)
             {
                 int idEnCelda = tableroLogico[x, y];
-                int idSemillaEnMano = 1;
+                int idSemillaEnMano = UIManager.Instancia.idPlantaSeleccionada;
 
                 if (idEnCelda != 0 && tableroVisual[x, y] == null)
                 {
@@ -60,7 +72,12 @@ public class GridManager : MonoBehaviour
 
                 if (idEnCelda == 0)
                 {
-                    Plantar(x, y, idSemillaEnMano);
+                    int costo = (idSemillaEnMano == 3) ? 50 : 100;
+
+                    if (GestorEconomia.Instancia.GastarSoles(costo))
+                    {
+                        Plantar(x, y, idSemillaEnMano);
+                    }
                 }
                 else
                 {
@@ -76,14 +93,30 @@ public class GridManager : MonoBehaviour
         float offsetY = (filas - 1) * altoCelda / 2f;
         Vector2 posicionFisica = new Vector2((x * anchoCelda) - offsetX, (y * altoCelda) - offsetY);
 
-        GameObject prefabAInstanciar = (idPlanta == 2) ? prefabPlantaFusionada : prefabPlantaBase;
+        GameObject prefabAInstanciar = null;
 
-        GameObject nuevaPlanta = Instantiate(prefabAInstanciar, posicionFisica, Quaternion.identity);
+        if (idPlanta == 1)
+        {
+            prefabAInstanciar = prefabPlantaBase;
+        }
+        else if (idPlanta == 2)
+        {
+            prefabAInstanciar = prefabPlantaFusionada;
+        }
+        else if (idPlanta == 3)
+        {
+            prefabAInstanciar = prefabGirasol;
+        }
 
-        tableroLogico[x, y] = idPlanta;
-        tableroVisual[x, y] = nuevaPlanta;
+        if (prefabAInstanciar != null)
+        {
+            GameObject nuevaPlanta = Instantiate(prefabAInstanciar, posicionFisica, Quaternion.identity);
 
-        Debug.Log($"Se plantó el ID {idPlanta} en la celda [{x}, {y}]");
+            tableroLogico[x, y] = idPlanta;
+            tableroVisual[x, y] = nuevaPlanta;
+
+            Debug.Log($"Se plantó el ID {idPlanta} en la celda [{x}, {y}]");
+        }
     }
 
     void IntentarFusion(int x, int y, int idBase, int idNueva)
