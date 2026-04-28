@@ -11,13 +11,16 @@ public class Planta : MonoBehaviour
 
     private float temporizador;
 
-    void Update()
+    protected virtual void Update()
     {
-        temporizador += Time.deltaTime;
-        if (temporizador >= ritmoDeDisparo)
+        if (prefabProyectil != null)
         {
-            Disparar();
-            temporizador = 0f;
+            temporizador += Time.deltaTime;
+            if (temporizador >= ritmoDeDisparo)
+            {
+                Disparar();
+                temporizador = 0f;
+            }
         }
     }
 

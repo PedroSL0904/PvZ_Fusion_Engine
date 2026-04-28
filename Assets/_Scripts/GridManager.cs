@@ -42,15 +42,18 @@ public class GridManager : MonoBehaviour
             Vector2 posMousePantalla = Mouse.current.position.ReadValue();
             Vector2 posMouse = Camera.main.ScreenToWorldPoint(posMousePantalla);
 
-            RaycastHit2D hit = Physics2D.Raycast(posMouse, Vector2.zero);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(posMouse, Vector2.zero);
 
-            if (hit.collider != null && hit.collider.CompareTag("Sol"))
+            foreach (RaycastHit2D hit in hits)
             {
-                int valorSol = hit.collider.GetComponent<Sol>().valor;
-                GestorEconomia.Instancia.AgregarSoles(valorSol);
-                Destroy(hit.collider.gameObject);
+                if (hit.collider != null && hit.collider.CompareTag("Sol"))
+                {
+                    int valorSol = hit.collider.GetComponent<Sol>().valor;
+                    GestorEconomia.Instancia.AgregarSoles(valorSol);
+                    Destroy(hit.collider.gameObject);
 
-                return; 
+                    return; 
+                }
             }
 
             float offsetX = (columnas - 1) * anchoCelda / 2f;

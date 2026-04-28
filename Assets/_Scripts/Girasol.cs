@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class Girasol : MonoBehaviour
+public class Girasol : Planta
 {
     [Header("Producción")]
     public GameObject prefabSol;
-    public float ritmoDeGeneracion = 10f; 
+    public float ritmoDeGeneracion = 10f;
 
-    private float temporizador;
+    private float temporizadorSoles;
 
-    void Update()
+    protected override void Update()
     {
-        temporizador += Time.deltaTime;
-        if (temporizador >= ritmoDeGeneracion)
+        temporizadorSoles += Time.deltaTime;
+        if (temporizadorSoles >= ritmoDeGeneracion)
         {
             GenerarSol();
-            temporizador = 0f;
+            temporizadorSoles = 0f;
         }
     }
 
