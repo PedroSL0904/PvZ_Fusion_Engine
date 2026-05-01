@@ -20,9 +20,10 @@ Aunque visualmente respeta la estética del juego original, el motor interno fue
 * **Motor Relacional de Fusiones:** El sistema de combinaciones de plantas funciona a través de un diccionario de *Tuplas* en C#, actuando como una base de datos ultrarrápida que destruye, instancia y actualiza el ID lógico en un solo micro-ciclo de procesamiento.
 * **Separación de Capas (Backend/Frontend):** Las entidades lógicas (salud, daño, estados) están completamente aisladas de los *sprites* visuales, permitiendo aplicar el comportamiento de fusión a cualquier objeto con solo cambiar su identificador numérico.
 * **Físicas y Hitboxes Desacoplados:** El sistema de daño utiliza componentes `Collider2D` delegados, conectando las colisiones del motor de físicas directamente a las variables de salud de los scripts principales de manera limpia.
-* **Patrón Singleton y UI Desacoplada:** La economía (generación, validación de costos y recolección de soles penetrante vía `RaycastAll`) se gestiona a través de una instancia global única (`GestorEconomia`), la cual actualiza la interfaz de usuario en tiempo real sin crear dependencias circulares.
-* **Polimorfismo en Entidades:** Las plantas defensivas y productoras heredan de una clase base común, permitiendo al sistema de Inteligencia Artificial de los enemigos interactuar genéricamente con cualquier obstáculo sin requerir validaciones individuales.
-* **Director de Oleadas (Corrutinas):** El flujo de enemigos está aislado en un sistema asíncrono que programa instancias matemáticas en los carriles basándose en listas de reproducción (Waves) y tiempos de preparación.
+* **Patrón Singleton y UI Desacoplada:** La economía se gestiona a través de una instancia global única (`GestorEconomia`), la cual actualiza la interfaz de usuario en tiempo real sin crear dependencias circulares.
+* **Sistema de Enfriamiento (Cooldowns):** Gestión asíncrona mediante Corrutinas acopladas al `UIManager` que controlan el bloqueo lógico de selección y el feedback visual (`Image.fillAmount`) de las tarjetas de semillas de forma independiente.
+* **Polimorfismo en Entidades:** Las plantas defensivas y productoras heredan de una clase base común, permitiendo a la IA de los enemigos interactuar genéricamente con cualquier obstáculo.
+* **Director de Oleadas (Corrutinas):** El flujo de enemigos está aislado en un sistema asíncrono que programa instancias matemáticas en los carriles basándose en listas de reproducción y tiempos de preparación.
 
 ---
 
@@ -35,6 +36,7 @@ Aunque visualmente respeta la estética del juego original, el motor interno fue
 - [x] Máquina de estados para enemigos (Caminar / Masticar / Morir).
 - [x] Sistema económico de generación y recolección de Soles.
 - [x] Spawner automatizado por oleadas.
+- [x] Tiempos de recarga (Cooldowns) y feedback visual en UI.
 
 ---
 
