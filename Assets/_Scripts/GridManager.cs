@@ -75,11 +75,14 @@ public class GridManager : MonoBehaviour
 
                 if (idEnCelda == 0)
                 {
+                    if (idSemillaEnMano == 0) return;
                     int costo = (idSemillaEnMano == 3) ? 50 : 100;
 
                     if (GestorEconomia.Instancia.GastarSoles(costo))
                     {
                         Plantar(x, y, idSemillaEnMano);
+                        UIManager.Instancia.IniciarCooldown(idSemillaEnMano);
+                        UIManager.Instancia.DeseleccionarPlanta();
                     }
                 }
                 else
