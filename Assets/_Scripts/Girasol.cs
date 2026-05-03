@@ -20,9 +20,12 @@ public class Girasol : Planta
 
     void GenerarSol()
     {
-        Vector2 offsetAleatorio = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
-        Vector2 posicionSpawneo = (Vector2)transform.position + offsetAleatorio;
+        GameObject nuevoSol = Instantiate(prefabSol, transform.position, Quaternion.identity);
 
-        Instantiate(prefabSol, posicionSpawneo, Quaternion.identity);
+        Sol scriptSol = nuevoSol.GetComponent<Sol>();
+        if (scriptSol != null)
+        {
+            scriptSol.ConfigurarParabola(transform.position);
+        }
     }
 }

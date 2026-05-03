@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 using TMPro;
-using System.Collections; 
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,6 +9,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI textoSoles;
 
     public int idPlantaSeleccionada = 0;
+
+    public bool modoPalaActivo = false;
 
     [Header("Tarjetas y Cooldowns")]
     public Image overlayLanzaguisantes;
@@ -31,17 +33,32 @@ public class UIManager : MonoBehaviour
 
     public void SeleccionarLanzaguisantes()
     {
-        if (lanzaguisantesListo) idPlantaSeleccionada = 1;
+        if (lanzaguisantesListo)
+        {
+            idPlantaSeleccionada = 1;
+            modoPalaActivo = false; 
+        }
     }
 
     public void SeleccionarGirasol()
     {
-        if (girasolListo) idPlantaSeleccionada = 3;
+        if (girasolListo)
+        {
+            idPlantaSeleccionada = 3;
+            modoPalaActivo = false; 
+        }
+    }
+
+    public void SeleccionarPala()
+    {
+        modoPalaActivo = true;
+        idPlantaSeleccionada = 0; 
     }
 
     public void DeseleccionarPlanta()
     {
         idPlantaSeleccionada = 0;
+        modoPalaActivo = false; 
     }
 
     public void IniciarCooldown(int idPlanta)

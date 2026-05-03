@@ -16,6 +16,7 @@ public class GridManager : MonoBehaviour
     public GameObject prefabPlantaBase;     
     public GameObject prefabPlantaFusionada;
     public GameObject prefabGirasol;
+    public GameObject prefabCortadora;
 
     private int[,] tableroLogico;
 
@@ -33,6 +34,8 @@ public class GridManager : MonoBehaviour
         recetasDeFusion.Add(new System.Tuple<int, int>(1, 1), 2);
 
         Debug.Log("Tablero virtual y Motor de Fusiones inicializados.");
+
+        GenerarCortadoras();
     }
 
     void Update()
@@ -48,11 +51,12 @@ public class GridManager : MonoBehaviour
             {
                 if (hit.collider != null && hit.collider.CompareTag("Sol"))
                 {
-                    int valorSol = hit.collider.GetComponent<Sol>().valor;
-                    GestorEconomia.Instancia.AgregarSoles(valorSol);
-                    Destroy(hit.collider.gameObject);
-
-                    return; 
+                    Sol scriptSol = hit.collider.GetComponent<Sol>();
+                    if (scriptSol != null)
+                    {
+                        scriptSol.RecolectarYVolar();
+                    }
+                    return;
                 }
             }
 
@@ -66,6 +70,24 @@ public class GridManager : MonoBehaviour
             {
                 int idEnCelda = tableroLogico[x, y];
                 int idSemillaEnMano = UIManager.Instancia.idPlantaSeleccionada;
+
+                if (UIManager.Instancia.modoPalaActivo)
+                {
+                    if (idEnCelda != 0 && tableroVisual[x, y] != null)
+                    {
+                        Destroy(tableroVisual[x, y]);
+
+                        tableroVisual[x, y] = null;
+
+                        tableroLogico[x, y] = 0;
+
+                        Debug.Log($"¡Planta desenterrada en la celda [{x}, {y}]!");
+
+                        UIManager.Instancia.DeseleccionarPlanta();
+                    }
+
+                    return;
+                }
 
                 if (idEnCelda != 0 && tableroVisual[x, y] == null)
                 {
@@ -157,6 +179,21 @@ public class GridManager : MonoBehaviour
                 Vector2 pos = new Vector2((x * anchoCelda) - offsetX, (y * altoCelda) - offsetY);
                 Gizmos.DrawWireCube(pos, new Vector3(anchoCelda, altoCelda, 0));
             }
+        }
+    }
+    void GenerarCortadoras()
+    {
+        float offsetX = (columnas - 1) * anchoCelda / 2f;
+        float offsetY = (filas - 1) * altoCelda / 2f;
+
+        float posX = (-1 * anchoCelda) - offsetX;
+
+        for (int y = 0; y < filas; y++)
+        {
+            float posY = (y * altoCelda) - offsetY;
+            Vector2 posicionFisica = new Vector2(posX, posY);
+
+            Instantiate(prefabCortadora, posicionFisica, Quaternion.identity);
         }
     }
 }
