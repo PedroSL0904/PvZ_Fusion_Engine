@@ -14,32 +14,33 @@ Este proyecto es estrictamente un **Fan-Game técnico y educativo sin fines de l
 ---
 
 ## ⚙️ Arquitectura Técnica
-El motor ha sido diseñado aplicando patrones de ingeniería para garantizar escalabilidad y un desacoplamiento efectivo entre lógica y representación visual:
+Aunque visualmente respeta la estética del juego original, el motor interno fue diseñado aplicando patrones de ingeniería de software para garantizar escalabilidad:
 
-* **GridManager Lógico:** El tablero utiliza una matriz matemática bidimensional que gestiona el estado del terreno (Ocupado/Vacío) con validación en tiempo real[cite: 4]. El sistema calcula automáticamente las posiciones de instancia basándose en el ancho (`1.2f`) y alto (`1.5f`) de celda definido[cite: 4].
-* **Motor Relacional de Fusiones:** Las combinaciones de plantas operan a través de un diccionario de `Tuplas` en C#, permitiendo identificar recetas de fusión, destruir las entidades base y actualizar el ID lógico del tablero en un solo ciclo de procesamiento[cite: 4].
-* **Defensa de Última Línea (Cortadoras):** Sistema de limpieza de carriles que utiliza detección de colisiones mediante `HitboxEnemigo`[cite: 5]. Al activarse, inicia un motor cinemático que aplica daño masivo y se desplaza horizontalmente hasta el límite de la escena[cite: 4, 5].
-* **Feedback Visual de Daño:** Sistema de corrutinas desacoplado que manipula la propiedad `color` del `SpriteRenderer` para generar un efecto de "Flash White" instantáneo al recibir impacto, optimizando el *game feel* sin redundancia de materiales[cite: 5].
-* **Gestión de Economía y Soles:** La economía se centraliza en un `GestorEconomia` (Singleton) que procesa la recolección de soles[cite: 2]. Los soles utilizan parábolas físicas para su aparición y traslación lineal hacia la UI mediante la conversión de coordenadas de mundo a pantalla[cite: 3, 8].
-* **Director de Oleadas:** El flujo de enemigos es gestionado por un sistema asíncrono (`SpawnerOleadas`) que programa instancias basadas en configuraciones de oleada y tiempos de preparación[cite: 9].
-* **Físicas y Hitboxes Desacoplados:** El sistema de daño utiliza componentes `Collider2D` delegados que conectan las colisiones físicas con las variables de salud de los scripts principales de manera limpia[cite: 5, 7].
+* **GridManager Lógico:** El tablero no depende de colisiones visuales para la construcción. Utiliza una matriz matemática bidimensional en memoria para gestionar el estado del terreno (Ocupado/Vacío) con validación en tiempo real.
+* **Motor Relacional de Fusiones:** El sistema de combinaciones de plantas funciona a través de un diccionario de *Tuplas* en C#, actuando como una base de datos ultrarrápida que destruye, instancia y actualiza el ID lógico en un solo micro-ciclo de procesamiento.
+* **Separación de Capas (Backend/Frontend):** Las entidades lógicas (salud, daño, estados) están completamente aisladas de los *sprites* visuales, permitiendo aplicar el comportamiento de fusión a cualquier objeto con solo cambiar su identificador numérico.
+* **Físicas y Hitboxes Desacoplados:** El sistema de daño utiliza componentes `Collider2D` delegados, conectando las colisiones del motor de físicas directamente a las variables de salud de los scripts principales de manera limpia.
+* **Patrón Singleton y UI Desacoplada:** La economía se gestiona a través de una instancia global única (`GestorEconomia`), la cual actualiza la interfaz de usuario en tiempo real sin crear dependencias circulares.
+* **Sistema de Enfriamiento (Cooldowns):** Gestión asíncrona mediante Corrutinas acopladas al `UIManager` que controlan el bloqueo lógico de selección y el feedback visual (`Image.fillAmount`) de las tarjetas de semillas de forma independiente.
+* **Polimorfismo en Entidades:** Las plantas defensivas y productoras heredan de una clase base común, permitiendo a la IA de los enemigos interactuar genéricamente con cualquier obstáculo.
+* **Director de Oleadas (Corrutinas):** El flujo de enemigos está aislado en un sistema asíncrono que programa instancias matemáticas en los carriles basándose en listas de reproducción y tiempos de preparación.
 
 ---
 
 ## 🚀 Estado Actual del Desarrollo
-- [x] Generación procedural de la matriz del jardín[cite: 4].
-- [x] Traducción de inputs (píxeles a coordenadas del tablero)[cite: 4].
-- [x] Diccionario relacional para fusiones exitosas[cite: 4].
-- [x] Sistema económico de generación y recolección de Soles[cite: 2, 8].
-- [x] **Feedback visual (Flash) al recibir daño en enemigos**[cite: 5].
-- [x] **Sistema de Cortadoras de Césped funcional por carril**.
-- [x] Spawner automatizado por oleadas[cite: 9].
+- [x] Generación procedural de la matriz del jardín.
+- [x] Traducción de inputs (píxeles a coordenadas del tablero).
+- [x] Sistema binario de plantación e instanciación de Prefabs.
+- [x] Diccionario relacional para fusiones exitosas.
+- [x] Comportamiento autónomo de combate (Temporizadores e instanciación de proyectiles).
+- [x] Máquina de estados para enemigos (Caminar / Masticar / Morir).
+- [x] Sistema económico de generación y recolección de Soles.
+- [x] Spawner automatizado por oleadas.
 - [x] Tiempos de recarga (Cooldowns) y feedback visual en UI.
-- [ ] Integración de arte final y animaciones cuadro por cuadro (En proceso).
 
 ---
 
 ## 🛠️ Tecnologías Utilizadas
-* **Motor:** Unity Editor (6000.0.44f1)[cite: 1]
+* **Motor:** Unity Editor (2022.3 LTS+)
 * **Lenguaje:** C# (.NET)
-* **Control de Versiones:** Git / GitHub
+* **Control de Versiones:** Git / GitHub LFS
